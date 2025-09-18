@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from django.shortcuts import redirect
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -8,8 +9,22 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from rest_framework.views import APIView
 
+from django.shortcuts import redirect
+
 from .models import User
 from .serializers import RegisterSerializer, LoginSerializer
+
+def google_login_redirect(request):
+    """
+    Redirects the user straight to Google OAuth login page.
+    """
+    return redirect('/accounts/google/login/')
+
+def github_login_redirect(request):
+    """
+    Redirect straight to GitHub OAuth login page.
+    """
+    return redirect('/accounts/github/login/')
 
 
 class RegisterView(generics.CreateAPIView):
@@ -27,10 +42,14 @@ class LoginView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
 
+         # OAuth handling: if Google or GitHub ID is provided, merge or create handled by serializer
         refresh = RefreshToken.for_user(user)
         return Response({
             "refresh": str(refresh),
             "access": str(refresh.access_token),
+            "email": user.email,
+            "googleId": user.googleId,
+            "githubId": user.githubId,
         })
 
 

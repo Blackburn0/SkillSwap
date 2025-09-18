@@ -16,8 +16,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+
+     path("", lambda request: HttpResponse("Welcome to SkillSwap!")), 
+
+    # custom endpoints (register, login overrides, etc.)
     path("api/v1/auth/", include("accounts.urls")),
+
+    # dj-rest-auth built-in endpoints
+    path("api/v1/auth/", include("dj_rest_auth.urls")),
+
+    # dj-rest-auth registration
+    path("api/v1/auth/registration/", include("dj_rest_auth.registration.urls")),
+
+    # Social login redirects & callbacks
+    path("accounts/", include("allauth.urls")),
 ]
+
+
+# check site_id in shell
+# python manage.py shell
+# from django.contrib.sites.models import Site
+
+# for site in Site.objects.all():
+#     print(site.id, site.domain, site.name)

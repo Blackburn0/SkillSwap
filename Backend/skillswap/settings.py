@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,32 +24,59 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ypu3bb-^iug4cqw1_^9!fmausbrpsd6)^r1fj9@8jg0sweykl4'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    # Django defaults
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # local apps
-    'accounts',
-    'services',
 
     # Third-party apps
     'rest_framework',
+    'rest_framework.authtoken',  
     'rest_framework_simplejwt',
     'corsheaders',
+
+    # for OAuth
+    'django.contrib.sites',          # Required by allauth
+    'allauth',                       # Core of django-allauth
+    'allauth.account',               # Handles email & password auth
+    'allauth.socialaccount',         # Base for social logins
+    'allauth.socialaccount.providers.google',  # Google provider
+    'allauth.socialaccount.providers.github',  # GitHub provider
+
+    'dj_rest_auth',                  # REST endpoints for auth
+    'dj_rest_auth.registration',     # Registration endpoints
+
+    # local apps
+    'accounts',
+    'services',
 ]
+
+SITE_ID = 1 
+
+# Allauth config
+# Tell allauth there's no username field
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# New login/signup configuration
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+
+REST_USE_JWT = True
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -54,6 +85,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -130,10 +162,51 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SITE_ID = 3  # Needed for django-allauth
+
+REST_USE_JWT = True  # Use SimpleJWT with dj-rest-auth
+
+# where to redirect after social login
+LOGIN_REDIRECT_URL = "/"  # or frontend URL
+LOGOUT_REDIRECT_URL = '/'
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         "APP": {
+#             "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+#             "secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+#             "key": ""
+#         },
+#         "SCOPE": [
+#             "openid",
+#             "profile",
+#             "email",
+#         ],
+#         "AUTH_PARAMS": {
+#             "access_type": "online",
+#         },
+#     },
+#     "github": {
+#         "APP": {
+#             "client_id": os.getenv("GITHUB_CLIENT_ID"),
+#             "secret": os.getenv("GITHUB_CLIENT_SECRET"),
+#             "key": ""
+#         },
+#         "SCOPE": [
+#             "profile",
+#             "email",
+#         ],
+#         "AUTH_PARAMS": {
+#             "access_type": "online",
+#         },
+#     }
+# }
+
+
 # DRF JWT Authentication Setup
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
 
