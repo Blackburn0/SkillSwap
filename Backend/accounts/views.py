@@ -11,8 +11,9 @@ from rest_framework.views import APIView
 
 from django.shortcuts import redirect
 
+from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 
 def google_login_redirect(request):
     """
@@ -51,8 +52,6 @@ class LoginView(generics.GenericAPIView):
             "googleId": user.googleId,
             "githubId": user.githubId,
         })
-
-
 
 class PasswordResetRequestView(APIView):
     permission_classes = [AllowAny]
@@ -95,3 +94,26 @@ class PasswordResetConfirmView(generics.GenericAPIView):
             return Response({"message": "Password has been reset"}, status=200)
         except Exception:
             return Response({"error": "Something went wrong"}, status=400)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # check old password
+        if not user.check_password(serializer.validated_data["old_password"]):
+            return Response({"old_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # set new password
+        user.set_password(serializer.validated_data["new_password"])
+        user.save()
+
+        return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
