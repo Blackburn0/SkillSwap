@@ -4,10 +4,6 @@ from django.shortcuts import redirect
 
 from .views import RegisterView, LoginView, PasswordResetRequestView, PasswordResetConfirmView, ChangePasswordView, google_login_redirect, github_login_redirect
 
-
-# def google_callback_redirect(request):
-   # return redirect('/accounts/google/login/callback/')
-
 urlpatterns = [
     path("signup/", RegisterView.as_view(), name="signup"),
     path("login/", LoginView.as_view(), name="login"),

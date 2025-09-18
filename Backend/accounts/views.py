@@ -1,15 +1,15 @@
 from rest_framework import generics, status
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from django.db import IntegrityError, DatabaseError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from rest_framework.views import APIView
-
-from django.shortcuts import redirect
 
 from rest_framework.permissions import IsAuthenticated
 from .models import User
@@ -33,31 +33,68 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            return Response({
+                "message": "User registered successfully",
+                "email": user.email,
+                "googleId": getattr(user, "googleId", None),
+                "githubId": getattr(user, "githubId", None),
+            }, status=status.HTTP_201_CREATED)
+
+        except IntegrityError as e:
+            # Example: duplicate email
+            return Response({"error": "A user with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data
 
-         # OAuth handling: if Google or GitHub ID is provided, merge or create handled by serializer
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
-            "email": user.email,
-            "googleId": user.googleId,
-            "githubId": user.githubId,
-        })
+            # OAuth handling: if Google or GitHub ID is provided, merge or create handled by serializer
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "email": user.email,
+                "googleId": getattr(user, "googleId", None),
+                "githubId": getattr(user, "githubId", None),
+            }, status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response({"error": "User does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PasswordResetRequestView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         email = request.data.get("email")
+        google_id = request.data.get("googleId")
+        github_id = request.data.get("githubId")
+
+        if not email:
+            return Response({"error": "Email is required"}, status=400)
+        
+        # disallow users who signup through google and github from resetting their passwords
+        if google_id:
+            return Response({"Please login with your Google account"}, status=400)
+        if github_id:
+            return Response({"Please login with your Github account"}, status=400)
+        
         try:
             user = User.objects.get(email=email)
             token = PasswordResetTokenGenerator().make_token(user)
@@ -74,6 +111,11 @@ class PasswordResetRequestView(APIView):
             return Response({"message": "Password reset link sent"}, status=200)
         except User.DoesNotExist:
             return Response({"error": "User with this email does not exist"}, status=404)
+        
+        # catch any other errors like email send failed
+        except Exception as e: 
+            return Response({"error": str(e)}, status=400)
+
 
 
 class PasswordResetConfirmView(generics.GenericAPIView):
@@ -95,7 +137,6 @@ class PasswordResetConfirmView(generics.GenericAPIView):
         except Exception:
             return Response({"error": "Something went wrong"}, status=400)
 
-
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     permission_classes = [IsAuthenticated]
@@ -105,15 +146,31 @@ class ChangePasswordView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
 
-        # check old password
-        if not user.check_password(serializer.validated_data["old_password"]):
-            return Response({"old_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # only allow users with usable passwords
+            if not user.has_usable_password():
+                return Response(
+                    {"error": "Users who signed up via Google or GitHub cannot change password."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-        # set new password
-        user.set_password(serializer.validated_data["new_password"])
-        user.save()
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-        return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+            # check old password
+            if not user.check_password(serializer.validated_data["old_password"]):
+                return Response({"old_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # set new password
+            user.set_password(serializer.validated_data["new_password"])
+            user.save()
+
+            return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+
+        except DatabaseError as e:
+            # Catch database-related errors
+            return Response({"error": "Database error occurred. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            # Catch all other unexpected errors
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
