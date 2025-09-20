@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -34,7 +35,17 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True, max_length=255)
+    user_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(unique=True)
+    password_hash = models.CharField(max_length=128)  # stores hashed password
+    bio = models.TextField(blank=True, null=True)
+    profile_picture_url = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    registration_date = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField(blank=True, null=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
+    num_reviews = models.IntegerField(default=0)
     googleId = models.CharField(unique=True, max_length=255, blank=True, null=True)
     githubId = models.CharField(unique=True, max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
