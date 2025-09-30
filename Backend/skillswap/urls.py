@@ -21,7 +21,7 @@ from django.http import HttpResponse
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-     path("", lambda request: HttpResponse("Welcome to SkillSwap!")), 
+    path("", lambda request: HttpResponse("Welcome to SkillSwap!")), 
 
     # auth endpoints
     # custom endpoints (register, login overrides, etc.)
@@ -35,6 +35,8 @@ urlpatterns = [
 
     # user-skill endpoints
     path("api/v1/user-skills/", include("userSkills.urls")),
+    # Other endpoints
+    path("api/v1/skills", include('skills.urls'))
 ]
 
 
