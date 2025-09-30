@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     # local apps
     'accounts',
     'services',
+    'userSkills',
 ]
 
 SITE_ID = 1 
