@@ -34,9 +34,9 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
 
     # user-skill endpoints
-    path("api/v1/user-skills/", include("userSkills.urls")),
+    path("api/v1/", include("userSkills.urls")),
     # Other endpoints
-    path("api/v1/skills", include('skills.urls'))
+    path("api/v1/", include('skills.urls'))
 ]
 
 

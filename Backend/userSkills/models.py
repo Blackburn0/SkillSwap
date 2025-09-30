@@ -1,14 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from skills.models import Skill
 
 User = get_user_model()
-
-class Skill(models.Model):
-  skill_id = models.AutoField(primary_key=True)
-  name = models.CharField(max_length=100)
-
-  def __str__(self):
-    return self.name
 
 class UserSkill(models.Model):
     SKILL_TYPE_CHOICES = [
@@ -32,4 +26,4 @@ class UserSkill(models.Model):
       unique_together = ('user', 'skill', 'skill_type')
 
     def __str__(self):
-      return f"{self.user.username} - {self.skill.name} ({self.skill_type})"
+      return f"{self.user.username} - {self.skill.skill_name} ({self.skill_type})"

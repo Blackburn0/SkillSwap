@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import AddUserSkillView, UserSkillsView
+from .views import AddUserSkillView, PublicUserSkillsView
 
 urlpatterns = [
-  path('add-skills/', AddUserSkillView.as_view(), name='add-user-skills'),
-  path('', UserSkillsView.as_view(), name='userSkills'),
+  path('user-skills/add-skills/', AddUserSkillView.as_view(), name='add-user-skills'),
+  path('user-skills/<int:user_id>/', PublicUserSkillsView.as_view(), name='public-user-skills'),
 ]

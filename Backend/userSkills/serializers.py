@@ -1,45 +1,71 @@
 from rest_framework import serializers
-from .models import UserSkill
+from userSkills.models import UserSkill
+from skills.models import Skill
+
 
 class UserSkillSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(source='user.id', read_only=True)
+  user_id = serializers.IntegerField(source='user.id', read_only=True)
 
-    class Meta:
-      model = UserSkill
-      fields = ['user_skill_id', 'user_id', 'skill', 'skill_type', 'proficiency_level', 'details']
+  class Meta:
+    model = UserSkill
+    fields = ['user_skill_id', 'user_id', 'skill', 'skill_type', 'proficiency_level', 'details']
+
 
 class AddUserSkillSerializer(serializers.Serializer):
   offerings = serializers.ListField(child=serializers.DictField(), required=False)
   desires = serializers.ListField(child=serializers.DictField(), required=False)
 
   def create(self, validated_data):
+    """
+    Create or update UserSkill instances for offerings and desires.
+    Automatically creates a Skill if it doesn't exist.
+    """
     user = self.context['request'].user
     created_skills = []
 
-    for skill_data in validated_data.get('offerings', []):
-      skill_instance = UserSkill.objects.create(
-        user=user,
-        skill_id=skill_data['skill_id'],
-        skill_type='offering',
-        proficiency_level=skill_data.get('proficiency_level'),
-        details=skill_data.get('details', '')
-      )
-      created_skills.append(skill_instance)
+    def add_skills(skill_list, skill_type):
+      for skill_data in skill_list:
+        skill_id = skill_data.get('skill_id')
+        skill_name = skill_data.get('skill_name', f"Skill {skill_id}")
+        category = skill_data.get('category', 'General')
+        description = skill_data.get('description', '')
 
-    for skill_data in validated_data.get('desires', []):
-      skill_instance = UserSkill.objects.create(
-        user=user,
-        skill_id=skill_data['skill_id'],
-        skill_type='desiring',
-        proficiency_level=skill_data.get('proficiency_level'),
-        details=skill_data.get('details', '')
-      )
-      created_skills.append(skill_instance)
+        # Get or create Skill safely
+        skill_obj, _ = Skill.objects.get_or_create(
+          skill_id=skill_id,
+          defaults={
+            'skill_name': skill_name,
+            'category': category,
+            'description': description
+          }
+        )
+
+        # Create or update UserSkill
+        skill_instance, _ = UserSkill.objects.update_or_create(
+          user=user,
+          skill=skill_obj,
+          skill_type=skill_type,
+          defaults={
+            'proficiency_level': skill_data.get('proficiency_level', ''),
+            'details': skill_data.get('details', '')
+          }
+        )
+        created_skills.append(skill_instance)
+
+    # Add offerings and desires
+    add_skills(validated_data.get('offerings', []), 'offering')
+    add_skills(validated_data.get('desires', []), 'desiring')
 
     return created_skills
 
   def to_representation(self, instance):
-    return UserSkillSerializer(instance, many=True).data
+      """
+      Serialize the list of UserSkill model instances
+      """
+      return UserSkillSerializer(instance, many=True).data
+
+
+
 
 """
 Example Response
