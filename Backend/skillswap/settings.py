@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'userSkills',
     'skills',
     'listings',
+    'reviews',
+    'userblocks',
 ]
 
 SITE_ID = 1 
