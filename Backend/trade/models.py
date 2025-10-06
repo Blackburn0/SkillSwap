@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-from skills.models import Skill
-from skills.models import SkillListing
+# from skills.models import Skill
+# from skills.models import SkillListing
 
 
 class TradeProposal(models.Model):
@@ -15,11 +15,11 @@ class TradeProposal(models.Model):
     ]
 
     proposal_id = models.AutoField(primary_key=True)
-    listing = models.ForeignKey(SkillListing, on_delete=models.CASCADE, related_name="proposals")
+    # listing = models.ForeignKey(SkillListing, on_delete=models.CASCADE, related_name="proposals")
     proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="proposals_made")
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="proposals_received")
-    skill_offered_by_proposer = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="proposals_offered")
-    skill_desired_by_proposer = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="proposals_desired")
+    # skill_offered_by_proposer = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="proposals_offered")
+    # skill_desired_by_proposer = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="proposals_desired")
     message = models.TextField()
     proposal_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=20, choices=PROPOSAL_STATUS_CHOICES, default="pending")
@@ -44,8 +44,8 @@ class Trade(models.Model):
     )
     user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trades_as_user1")
     user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trades_as_user2")
-    skill1 = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="trades_as_skill1")
-    skill2 = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="trades_as_skill2")
+    # skill1 = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="trades_as_skill1")
+    # skill2 = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="trades_as_skill2")
 
     start_date = models.DateTimeField(default=timezone.now)
     expected_completion_date = models.DateField(blank=True, null=True)
