@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'services',
     'trade',
     'notification',
+    'message',
 ]
 
 SITE_ID = 1 
