@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-from skills.models import Skill
-from skills.models import SkillListing
+# uncomment when we merge the files
+# from skills.models import Skill
+# from skills.models import SkillListing
 
 
 class TradeProposal(models.Model):
