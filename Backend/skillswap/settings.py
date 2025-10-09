@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from datetime import timedelta
 
 load_dotenv()
 
@@ -62,6 +63,11 @@ INSTALLED_APPS = [
     # local apps
     'accounts',
     'services',
+    'userSkills',
+    'skills',
+    'listings',
+    'reviews',
+    'userblocks',
 ]
 
 SITE_ID = 1 
@@ -215,3 +221,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "accounts.User"
 
+
+# Extend token lifetime (dev only)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}

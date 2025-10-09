@@ -21,19 +21,25 @@ from django.http import HttpResponse
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-     path("", lambda request: HttpResponse("Welcome to SkillSwap!")), 
+    path("", lambda request: HttpResponse("Welcome to SkillSwap!")), 
 
+    # auth endpoints
     # custom endpoints (register, login overrides, etc.)
     path("api/v1/auth/", include("accounts.urls")),
-
     # dj-rest-auth built-in endpoints
     path("api/v1/auth/", include("dj_rest_auth.urls")),
-
     # dj-rest-auth registration
     path("api/v1/auth/registration/", include("dj_rest_auth.registration.urls")),
-
     # Social login redirects & callbacks
     path("accounts/", include("allauth.urls")),
+
+    # user-skill endpoints
+    path("api/v1/", include("userSkills.urls")),
+    # Other endpoints
+    path("api/v1/", include('skills.urls')),
+    path("api/v1/", include("listings.urls")),
+    path("api/v1/", include("reviews.urls")),
+    path("api/v1/", include("userblocks.urls"))
 ]
 
 
