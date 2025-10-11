@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-# from trades.models import Trade, TradeProposal
+from trade.models import Trade, TradeProposal
 
 
 class Message(models.Model):
@@ -15,10 +15,10 @@ class Message(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_received")
 
     trade = models.ForeignKey(
-        # Trade, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages"
+        Trade, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages"
     )
     proposal = models.ForeignKey(
-        # TradeProposal, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages"
+        TradeProposal, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages"
     )
 
     content = models.TextField()

@@ -80,8 +80,19 @@ SITE_ID = 1
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 # New login/signup configuration
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+# ACCOUNT_LOGIN_METHODS = {"email"}
+# ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'  # use email to log in
+# ACCOUNT_SIGNUP_FIELDS = {
+#     "email": {"required": True},
+#     "password1": {"required": True},
+#     "password2": {"required": True},
+# }
+
+ACCOUNT_LOGIN_METHODS = ["email"]  # Only email login supported
+ACCOUNT_SIGNUP_FIELDS = ["email", "password1", "password2"]
 
 
 REST_USE_JWT = True

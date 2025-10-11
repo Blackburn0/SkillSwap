@@ -2,8 +2,8 @@ from django.db import models
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-# from trades.models import Trade, TradeProposal
-# from messaging.models import Message 
+from trade.models import Trade, TradeProposal
+from message.models import Message 
 
 
 class Notification(models.Model):
@@ -18,13 +18,12 @@ class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
 
-    # Source can be message, proposal, or trade
-    # message = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
-    # proposal = models.ForeignKey(TradeProposal, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
-    # trade = models.ForeignKey(Trade, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
+    message = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
+    proposal = models.ForeignKey(TradeProposal, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
+    trade = models.ForeignKey(Trade, on_delete=models.SET_NULL, null=True, blank=True, related_name="notifications")
 
     type = models.CharField(max_length=50, choices=NOTIFICATION_TYPES)
-    message_text = models.TextField()  # renamed from `message` to avoid conflict with FK
+    message_text = models.TextField()
     timestamp = models.DateTimeField(default=timezone.now)
     is_read = models.BooleanField(default=False)
     link_url = models.CharField(max_length=255, blank=True, null=True)

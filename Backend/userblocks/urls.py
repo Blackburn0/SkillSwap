@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import UserBlockViewSet
 
 router = DefaultRouter()
-router.register(r'blocks', UserBlockViewSet, basename='userblock')
+router.register(r'', UserBlockViewSet, basename='userblock')
 
 urlpatterns = [
   path('', include(router.urls)),
