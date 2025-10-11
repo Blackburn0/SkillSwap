@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-# from skills.models import Skill
-# from skills.models import SkillListing
+from skills.models import Skill
+from skills.models import SkillListing
 
 
 class TradeProposal(models.Model):
