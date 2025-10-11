@@ -68,6 +68,9 @@ INSTALLED_APPS = [
     'listings',
     'reviews',
     'userblocks',
+    'trade',
+    'notification',
+    'message',
 ]
 
 SITE_ID = 1 
