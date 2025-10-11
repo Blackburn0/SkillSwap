@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.views.generic import TemplateView
+
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
@@ -46,6 +48,8 @@ urlpatterns = [
     path('api/v1/messages/', include('message.urls')),
 
 
+    # then in urlpatterns
+    path("api/docs/", TemplateView.as_view(template_name="api_docs.html"), name="api-docs"),
 
 ]
 
