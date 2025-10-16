@@ -41,7 +41,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     password_hash = models.CharField(max_length=128)  # stores hashed password
     bio = models.TextField(blank=True, null=True)

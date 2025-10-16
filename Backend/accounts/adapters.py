@@ -13,7 +13,25 @@ class CustomAccountAdapter(DefaultAccountAdapter):
     """
     Custom account adapter for regular account operations
     """
-    pass
+    
+    def clean_email(self, email):
+        """
+        Validate email - add logging to see what's happening
+        """
+        logger.info(f"CustomAccountAdapter.clean_email called with: {email}")
+        result = super().clean_email(email)
+        logger.info(f"clean_email result: {result}")
+        return result
+    
+    def save_user(self, request, user, form, commit=True):
+        """
+        Save user - add logging
+        """
+        logger.info(f"CustomAccountAdapter.save_user called for email: {user.email}")
+        logger.info(f"Request path: {request.path}")
+        result = super().save_user(request, user, form, commit)
+        logger.info(f"save_user completed, user id: {result.user_id if result else 'None'}")
+        return result
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):

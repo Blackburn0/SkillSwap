@@ -4,62 +4,91 @@ from .models import User
 from rest_framework import serializers
 from django.contrib.auth import password_validation
 
+from rest_framework import serializers
+from django.contrib.auth import authenticate
+from .models import User
+from django.contrib.auth import password_validation
+import logging
+
+logger = logging.getLogger(__name__)
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
-    googleId=serializers.CharField(write_only=True, required=False)
-    githubId=serializers.CharField(write_only=True, required=False)
+    googleId = serializers.CharField(write_only=True, required=False)
+    githubId = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
         fields = ["email", "password", "googleId", "githubId"]
 
+    def validate_email(self, value):
+        """
+        Check that the email is unique for regular signups
+        """
+        logger.info(f"validate_email called with: {value}")
+        
+        # Normalize email
+        value = value.lower().strip()
+        
+        # Check if email exists
+        exists = User.objects.filter(email=value).exists()
+        logger.info(f"Email {value} exists in DB: {exists}")
+        
+        if exists:
+            logger.error(f"Email {value} already exists!")
+            raise serializers.ValidationError("A user with this email already exists.")
+        
+        logger.info(f"Email {value} is unique, proceeding...")
+        return value
+
     def validate(self, data):
+        logger.info(f"validate called with data: {data}")
         email = data.get("email")
-        google_id = data.get("googleId")
-        github_id = data.get("githubId")
         
-        # 1. Check for existing user using normalized email
-        user = User.objects.filter(email=email).first()
-        
+        # Generate username from email
         if email:
-            # Simple version: use email part before '@'
-            generated_username = email.split('@')[0] 
-            
-            # Make it unique if necessary
-            base_username = generated_username
+            base_username = email.split('@')[0]
+            generated_username = base_username
             counter = 1
+            
+            logger.info(f"Generating username from email: {email}")
+            logger.info(f"Base username: {base_username}")
+            
+            # Ensure username is unique
             while User.objects.filter(username=generated_username).exists():
-                generated_username = f"{base_username}_{counter}"
+                logger.warning(f"Username {generated_username} exists, trying next...")
+                generated_username = f"{base_username}{counter}"
                 counter += 1
             
-            # Add the generated username to the validated data
+            logger.info(f"Final unique username: {generated_username}")
             data['username'] = generated_username
-            
-        return data # Returning data here allows the request to proceed to create/update
         
         return data
 
     def create(self, validated_data):
-        username = validated_data.pop("username")
+        logger.info(f"create called with validated_data: {validated_data}")
         
+        username = validated_data.pop("username")
         google_id = validated_data.pop("googleId", None)
         github_id = validated_data.pop("githubId", None)
         password = validated_data.pop("password", None)
 
-        # Handle provider-based signups: If Google or GitHub ID is provided,
-        # merge with an existing user with the same email or create a new one.
-        user = User.objects.filter(email=validated_data["email"]).first()
-        if user:
-            if google_id and not user.googleId:
-                user.googleId=google_id
-            if github_id and not user.githubId:
-                user.githubId = github_id
-            user.save()
+        logger.info(f"Creating user with username: {username}, email: {validated_data.get('email')}")
+        
+        try:
+            # Create new user
+            user = User.objects.create_user(
+                **validated_data,
+                username=username,
+                password=password or User.objects.make_random_password(),
+                googleId=google_id,
+                githubId=github_id
+            )
+            logger.info(f"User created successfully: {user.user_id}")
             return user
-
-        return User.objects.create_user(**validated_data, username=username, password=password or User.objects.make_random_password(), googleId=google_id, githubId=github_id)
-
+        except Exception as e:
+            logger.error(f"Error creating user: {str(e)}")
+            raise
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
