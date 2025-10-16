@@ -59,7 +59,7 @@ class LoginView(generics.GenericAPIView):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            user = serializer.validated_data
+            user = serializer.validated_data['user']
 
             # OAuth handling: if Google or GitHub ID is provided, merge or create handled by serializer
             refresh = RefreshToken.for_user(user)

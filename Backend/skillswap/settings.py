@@ -73,11 +73,46 @@ INSTALLED_APPS = [
     'message',
 ]
 
-SITE_ID = 1 
-
 # Allauth config
 # Tell allauth there's no username field
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# Link social accounts to existing users with matching email
+# Keep these:
+ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+# help with username generation:
+ACCOUNT_USERNAME_REQUIRED = True  
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  
+
+# Logging configuration (optional but helpful)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'accounts': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
 
 # New login/signup configuration
 # ACCOUNT_LOGIN_METHODS = {"email"}
@@ -181,8 +216,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-SITE_ID = 3  # Needed for django-allauth
+SITE_ID = 1 # Needed for django-allauth
 
 REST_USE_JWT = True  # Use SimpleJWT with dj-rest-auth
 

@@ -1,12 +1,17 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+import uuid
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Users must have an email address")
         email = self.normalize_email(email)
+
+        username = extra_fields.pop("username", None)
+        if not username:
+            username = f"user_{uuid.uuid4().hex[:12]}"
 
         # Merge accounts for multiple signins
         # If a user signs in with Google or GitHub later, check if a user with the same email exists.
@@ -50,6 +55,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     githubId = models.CharField(unique=True, max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+
+    @property
+    def id(self):
+        """
+        Provides an 'id' property that mirrors 'user_id' for compatibility 
+        with packages (like simple-jwt) that expect 'user.id'.
+        """
+        return self.user_id
 
     objects = UserManager()
 

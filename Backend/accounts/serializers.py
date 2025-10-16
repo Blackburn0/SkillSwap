@@ -14,7 +14,35 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ["email", "password", "googleId", "githubId"]
 
+    def validate(self, data):
+        email = data.get("email")
+        google_id = data.get("googleId")
+        github_id = data.get("githubId")
+        
+        # 1. Check for existing user using normalized email
+        user = User.objects.filter(email=email).first()
+        
+        if email:
+            # Simple version: use email part before '@'
+            generated_username = email.split('@')[0] 
+            
+            # Make it unique if necessary
+            base_username = generated_username
+            counter = 1
+            while User.objects.filter(username=generated_username).exists():
+                generated_username = f"{base_username}_{counter}"
+                counter += 1
+            
+            # Add the generated username to the validated data
+            data['username'] = generated_username
+            
+        return data # Returning data here allows the request to proceed to create/update
+        
+        return data
+
     def create(self, validated_data):
+        username = validated_data.pop("username")
+        
         google_id = validated_data.pop("googleId", None)
         github_id = validated_data.pop("githubId", None)
         password = validated_data.pop("password", None)
@@ -30,7 +58,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             user.save()
             return user
 
-        return User.objects.create_user(**validated_data, password=password or User.objects.make_random_password(), googleId=google_id, githubId=github_id)
+        return User.objects.create_user(**validated_data, username=username, password=password or User.objects.make_random_password(), googleId=google_id, githubId=github_id)
 
 
 class LoginSerializer(serializers.Serializer):
@@ -44,30 +72,33 @@ class LoginSerializer(serializers.Serializer):
         password=data.get("password")
         google_id=data.get("googleId")
         github_id=data.get("githubId")
+        user = None
 
         # Login via Google ID
         if google_id:
             user = User.objects.filter(googleId=google_id).first()
-            if user:
-                return user
-            raise serializers.ValidationError("Google account not registered.")
+            if not user:
+                raise serializers.ValidationError("Google account not registered.")
         
         # Login via Github ID
-        if github_id:
+        elif github_id:
             user = User.objects.filter(githubId=github_id).first()
-            if user:
-                return user
-            raise serializers.ValidationError("Github account not registered.")
+            if not user:
+                raise serializers.ValidationError("Github account not registered.")
         
         # Fallback to Email/Password auth
-        if email and password:
+        elif email and password:
             user = authenticate(email=data["email"], password=data["password"])
             if not user:
                 raise serializers.ValidationError("Invalid email or password")
-            return user
         
-        raise serializers.ValidationError("Login through either email/password, google or github")
+        # Handle general failure if no credentials were provided
+        else:
+            raise serializers.ValidationError("Login through either email/password, google or github")
 
+        # Attach the authenticated 'user' object to the data dictionary
+        data['user'] = user 
+        return data 
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True)
