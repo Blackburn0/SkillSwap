@@ -6,6 +6,12 @@ import Login from '../authentication/Login';
 import ForgotPassword from '../authentication/ForgotPassword';
 import ResetPassword from '../authentication/ResetPassword';
 import TeamInfo from '@/pages/TeamInfo';
+import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardHome from '@/pages/dashboard/Home';
+import Profile from '@/pages/dashboard/Profile';
+import Listing from '@/pages/dashboard/Listing';
+import Trade from '@/pages/dashboard/Trade';
+import Messages from '@/pages/dashboard/Messages';
 
 const AppRoutes = () => {
   return (
@@ -24,6 +30,15 @@ const AppRoutes = () => {
 
         {/* Onboarding */}
         <Route path="/onboarding" element={<Onboarding />} />
+
+        {/* Parent Dashboard route */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="trade" element={<Trade />} />
+          <Route path="listing" element={<Listing />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
       </Routes>
     </>
   );

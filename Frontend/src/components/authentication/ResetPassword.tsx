@@ -31,7 +31,7 @@ const ResetPassword = () => {
   useEnterKey(handleReset);
 
   return (
-    <div className="mx-auto min-h-screen max-w-md px-4 py-8">
+    <div className="mx-auto min-h-screen max-w-lg px-4 py-8">
       <div title="back">
         <ChevronLeft
           size={28}
