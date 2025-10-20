@@ -1,51 +1,25 @@
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import { useToast } from '@/hooks/useToast';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const { showToast } = useToast();
+  const navigate = useNavigate();
   return (
-    <div className="px-4">
-      {/* Button and Toast example usage */}
-      <div className="mt-20 flex w-60 flex-col gap-4">
-        <h1 className="text-2xl font-bold"> Button and Toast example usage </h1>
-        <Button onClick={() => showToast('Saved successfully!', 'success')}>
-          Success Toast
-        </Button>
-
-        <Button
-          variant="secondary"
-          onClick={() => showToast('Something went wrong!', 'error')}
-        >
-          Error Toast
-        </Button>
-
-        <Button
-          variant="outline"
-          onClick={() => showToast('This is some information.', 'info')}
-        >
-          Info Toast
-        </Button>
-        <Button
-          disabled
-          fullWidth
-          onClick={() => showToast('This is some information.', 'info')}
-        >
-          Info Toast
-        </Button>
+    <div className="mx-auto flex min-h-screen max-w-md flex-col px-4 py-8 pt-20 text-center">
+      <div className="my-10 text-4xl font-bold text-red-600">Swapo</div>
+      <div>
+        <h1 className="mb-5 text-3xl font-bold">
+          Trade your skills, unlock new ones
+        </h1>
+        <p className="text-base font-medium text-gray-500">
+          {' '}
+          Connect with others to exchange your expertise and learn new skills.
+        </p>
       </div>
-
-      {/* input example */}
-      <div className="my-20">
-        <h2 className="text-2xl font-bold">Input example</h2>
-        {/* 1. Text Input */}
-        <Input type="text" label="Full Name" />
-        {/*  2. Full Width Input */}
-        <Input type="email" label="Email Address" fullWidth />
-        {/*  3. Textarea */}
-        <Input textarea label="Message" rows={4} fullWidth />
-        {/*  4. With Error Message */}
-        <Input type="password" label="Password" error="Password is required" />
+      <div className="mt-12 space-y-4">
+        <Button onClick={() => navigate('/signup')}>Sign Up</Button>
+        <Button variant="outline" onClick={() => navigate('/login')}>
+          Log in
+        </Button>
       </div>
     </div>
   );

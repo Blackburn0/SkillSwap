@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold rounded-lg py-2 px-4 transition duration-300 ease-in-out shadow-md focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center font-semibold rounded-lg w-full py-3 cursor-pointer px-4 transition duration-300 ease-in-out shadow-md focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed';
 
   const variants = {
     primary: 'bg-red-600 hover:bg-red-700 text-white',
