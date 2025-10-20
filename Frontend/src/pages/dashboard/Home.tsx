@@ -144,7 +144,7 @@ const DashboardHome = () => {
                 <link.icon size={18} />
               </div>
               <div className="text-lg font-semibold text-gray-700">
-                New Listing
+                {link.title}
               </div>
             </div>
           ))}

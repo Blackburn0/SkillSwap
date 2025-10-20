@@ -12,6 +12,7 @@ import Profile from '@/pages/dashboard/Profile';
 import Listing from '@/pages/dashboard/Listing';
 import Trade from '@/pages/dashboard/Trade';
 import Messages from '@/pages/dashboard/Messages';
+import Notifications from '@/pages/dashboard/Notifications';
 
 const AppRoutes = () => {
   return (
@@ -39,6 +40,10 @@ const AppRoutes = () => {
           <Route path="messages" element={<Messages />} />
           <Route path="profile" element={<Profile />} />
         </Route>
+
+        {/* Do not share the dashboard layout but part of the dashboard */}
+        <Route path="/dashboard/notification" element={<Notifications />} />
+        <Route path="/dashboard/notification" element={<Notifications />} />
       </Routes>
     </>
   );
