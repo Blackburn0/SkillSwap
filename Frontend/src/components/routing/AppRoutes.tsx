@@ -21,6 +21,8 @@ import Filters from '@/pages/dashboard/Filters';
 import PaymentMethods from '@/pages/dashboard/PaymentMethods';
 import BlockedUsers from '@/pages/dashboard/BlockedUsers';
 import NotFound from '@/pages/dashboard/404';
+import CreateListing from '@/pages/CreateListing';
+
 
 const AppRoutes = () => {
   return (
@@ -59,6 +61,9 @@ const AppRoutes = () => {
         {/* Do not share the dashboard layout but part of the dashboard */}
         <Route path="/dashboard/notification" element={<Notifications />} />
         <Route path="/dashboard/notification" element={<Notifications />} />
+
+        <Route path="/create-listing" element={<CreateListing />} />
+        
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
