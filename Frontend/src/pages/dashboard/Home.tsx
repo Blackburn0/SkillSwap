@@ -52,7 +52,7 @@ const quickLinksData = [
 const DashboardHome = () => {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="min-h-screen bg-stone-50 pb-10 dark:bg-gray-900">
       {/* Profile Header */}
       <div className="flex items-center justify-between bg-red-500 px-4 pt-10 pb-26 text-white">
         <div className="flex items-center justify-center space-x-3">
@@ -80,7 +80,7 @@ const DashboardHome = () => {
       </div>
 
       {/* Active Trades */}
-      <div className="mx-4 -mt-10 rounded-xl border-transparent bg-white p-4 shadow-xl">
+      <div className="mx-4 -mt-10 rounded-xl border-transparent bg-white p-4 text-black shadow-xl dark:bg-gray-800 dark:text-gray-100">
         <div className="flex justify-between space-y-4">
           <h2 className="text-lg font-bold">Active Trades</h2>
           <a className="cursor-pointer text-sm font-medium text-red-500 underline-offset-2 hover:underline">
@@ -89,14 +89,10 @@ const DashboardHome = () => {
         </div>
         <div>
           {activeTradeData.map((trade, idx) => (
-            <div className="flex items-center justify-between">
-              {' '}
-              <div
-                key={idx}
-                className="mb-4 flex items-center space-x-3 text-left"
-              >
+            <div className="flex items-center justify-between" key={idx}>
+              <div className="mb-4 flex items-center space-x-3 text-left">
                 <div
-                  className="cursor-pointer rounded-full border-transparent bg-stone-200 p-1"
+                  className="cursor-pointer rounded-full border-transparent bg-stone-200 p-1 dark:bg-gray-600"
                   onClick={() => navigate(trade.senderProfileurl)}
                 >
                   <img
@@ -106,20 +102,24 @@ const DashboardHome = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Trade with {trade.name}</h3>
-                  <p className="text-sm text-gray-700">{trade.desc}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                    Trade with {trade.name}
+                  </h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {trade.desc}
+                  </p>
                 </div>
               </div>
               {idx === 0 ? (
                 <div
-                  className="cursor-pointer text-red-600"
+                  className="cursor-pointer text-red-600 dark:text-red-400"
                   onClick={() => navigate(trade.url)}
                 >
                   <MessageSquareDot size={20} />
                 </div>
               ) : (
                 <div
-                  className="cursor-pointer text-gray-700"
+                  className="cursor-pointer text-gray-700 dark:text-gray-300"
                   onClick={() => navigate(trade.url)}
                 >
                   <MessageSquare size={20} />
@@ -132,18 +132,20 @@ const DashboardHome = () => {
 
       {/* Quick Links */}
       <div className="mx-4 my-10">
-        <h3 className="mb-5 text-left text-lg font-bold">Quick Links</h3>
-        <div className="grid grid-cols-2 gap-6 bg-white">
+        <h3 className="mb-5 text-left text-lg font-bold text-gray-900 dark:text-gray-100">
+          Quick Links
+        </h3>
+        <div className="grid grid-cols-2 gap-6">
           {quickLinksData.map((link, idx) => (
             <div
               key={idx}
-              className="flex cursor-pointer flex-col items-center rounded-xl border-transparent p-10 shadow-md hover:bg-gray-50/70"
+              className="flex cursor-pointer flex-col items-center rounded-xl border-transparent bg-white p-10 shadow-md hover:bg-gray-50/70 dark:bg-gray-800 dark:hover:bg-gray-700/90"
               onClick={() => navigate(link.url)}
             >
-              <div className="mb-2 rounded-full border-transparent bg-red-200/30 p-4 text-red-700">
+              <div className="mb-2 rounded-full border-transparent bg-red-200/30 p-4 text-red-700 dark:bg-red-100/20 dark:text-red-500">
                 <link.icon size={18} />
               </div>
-              <div className="text-lg font-semibold text-gray-700">
+              <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {link.title}
               </div>
             </div>
@@ -155,6 +157,3 @@ const DashboardHome = () => {
 };
 
 export default DashboardHome;
-
-/* TODO: */
-// use this icon to show unread/new messages: <MessageSquareDot />

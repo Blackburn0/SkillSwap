@@ -50,31 +50,35 @@ const Trade = () => {
   };
 
   return (
-    <div className="mx-auto max-w-xl pt-5">
+    <div className="mx-auto min-h-screen max-w-xl bg-stone-50 py-5 dark:bg-gray-900">
       {/* Header */}
-      <div className="relative mb-8 flex items-center justify-center">
+      <div className="relative mb-8 flex items-center justify-center border-b border-gray-200 pb-4 dark:border-gray-700">
         <ChevronLeft
           size={28}
-          className="absolute left-0 cursor-pointer"
+          className="absolute left-0 cursor-pointer text-gray-900 dark:text-gray-100"
           onClick={() => navigate(-1)}
         />
-        <h1 className="text-xl font-bold">Trades</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          Trades
+        </h1>
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="border-b border-gray-200 px-4">
+      <nav className="border-b border-gray-200 px-4 dark:border-gray-700">
         <ul className="flex justify-start space-x-10 text-sm font-medium">
           {nav.map((link) => (
             <li
               key={link}
-              className={`relative cursor-pointer pb-4 font-bold transition-colors ${
-                activeTab === link ? 'text-red-500' : 'text-gray-500'
+              className={`relative cursor-pointer pb-6 font-bold transition-colors ${
+                activeTab === link
+                  ? 'text-red-500 dark:text-red-400'
+                  : 'text-gray-500 dark:text-gray-400'
               }`}
               onClick={() => setActiveTab(link)}
             >
               {link}
               {activeTab === link && (
-                <span className="absolute right-0 bottom-0 left-0 mx-auto mt-2 h-[3px] w-full bg-red-500"></span>
+                <span className="absolute right-0 bottom-0 left-0 mx-auto mt-2 h-[3px] w-full rounded-full bg-red-500 dark:bg-red-400"></span>
               )}
             </li>
           ))}
@@ -82,11 +86,11 @@ const Trade = () => {
       </nav>
 
       {/* Trade List */}
-      <div className="space-y-4 bg-stone-50/50 px-4 pt-6 pb-10">
+      <div className="space-y-4 bg-stone-50/50 px-4 pt-6 pb-10 dark:bg-gray-900">
         {filteredTrades.map((trade, idx) => (
           <div
             key={idx}
-            className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50"
+            className="flex items-center justify-between rounded-lg border border-gray-200 p-3 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
           >
             <div className="flex items-center space-x-3">
               <img
@@ -95,7 +99,7 @@ const Trade = () => {
                 className="h-10 w-10 rounded-full"
               />
               <div className="text-left">
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                   Skill Trade with {trade.name}
                 </p>
                 <span
@@ -119,7 +123,10 @@ const Trade = () => {
               </div>
             </div>
 
-            <ChevronRight size={20} className="text-gray-400" />
+            <ChevronRight
+              size={20}
+              className="text-gray-400 dark:text-gray-200"
+            />
           </div>
         ))}
       </div>

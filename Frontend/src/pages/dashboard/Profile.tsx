@@ -66,27 +66,29 @@ const Profile = () => {
   const maxStars = 5;
 
   return (
-    <div className="mx-auto my-2 flex min-h-screen max-w-xl flex-col pb-10">
+    <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-stone-50/50 py-2 pb-10 dark:bg-gray-900">
       {/* Header */}
-      <div className="relative flex items-center justify-center border-b-2 border-gray-200 pt-2 pb-4">
+      <div className="relative flex items-center justify-center border-b border-gray-200 pt-2 pb-4 dark:border-gray-700">
         <ChevronLeft
           size={28}
-          className="absolute left-2 cursor-pointer"
+          className="absolute left-2 cursor-pointer text-gray-900 dark:text-gray-100"
           onClick={() => navigate(-1)}
         />
         <div className="text-center">
-          <h1 className="text-xl font-bold">Profile</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            Profile
+          </h1>
         </div>
         <Settings
           size={20}
-          className="absolute right-3 cursor-pointer"
+          className="absolute right-3 cursor-pointer text-gray-900 dark:text-gray-100"
           onClick={() => navigate('/dashboard/settings')}
         />
       </div>
 
-      {/* Profile */}
-      <div className="bg-stone-50/50 px-4 pt-10 text-center">
-        <div className="mx-auto h-36 w-36 overflow-hidden rounded-full bg-stone-200">
+      {/* Profile Section */}
+      <div className="rounded-b-lg bg-stone-50/50 px-4 pt-10 text-center dark:bg-gray-800">
+        <div className="mx-auto h-36 w-36 overflow-hidden rounded-full bg-stone-200 dark:bg-gray-700">
           <img
             src="https://img.icons8.com/office/40/person-male.png"
             alt="Profile Photo"
@@ -94,8 +96,10 @@ const Profile = () => {
           />
         </div>
         <div className="my-5">
-          <h1 className="text-2xl font-bold">John Doe</h1>
-          <div className="font-medium text-gray-600">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            John Doe
+          </h1>
+          <div className="font-medium text-gray-600 dark:text-gray-300">
             <p className="mt-[1px] mb-1 text-sm">UX Designer</p>
             <p className="text-xs">Joined 2021</p>
           </div>
@@ -104,19 +108,21 @@ const Profile = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="mt-6 mb-6 border-b border-gray-200 px-4">
+      <nav className="mt-6 mb-6 border-b border-gray-200 px-4 dark:border-gray-600">
         <ul className="flex justify-start space-x-6 text-sm font-medium">
           {nav.map((link) => (
             <li
               key={link}
-              className={`relative cursor-pointer pb-4 font-bold transition-colors ${
-                activeTab === link ? 'text-red-500' : 'text-gray-500'
+              className={`relative cursor-pointer pb-6 font-bold transition-colors ${
+                activeTab === link
+                  ? 'text-red-500 dark:text-red-400'
+                  : 'text-gray-500 dark:text-gray-400'
               }`}
               onClick={() => setActiveTab(link)}
             >
               {link}
               {activeTab === link && (
-                <span className="absolute right-0 bottom-0 left-0 mx-auto mt-2 h-[3px] w-full bg-red-500"></span>
+                <span className="absolute right-0 bottom-0 left-0 mx-auto mt-2 h-[3px] w-full rounded-full bg-red-500 dark:bg-red-400"></span>
               )}
             </li>
           ))}
@@ -125,19 +131,23 @@ const Profile = () => {
 
       {/* Tab Content */}
       <div className="flex flex-col space-y-4 px-6 pb-15">
+        {/* Skills Cards */}
         {(activeTab === 'All' || activeTab === 'Offered Skills') && (
           <div>
-            <h2 className="mt-3 mb-6 text-left text-xl font-bold">
+            <h2 className="mt-3 mb-6 text-left text-xl font-bold text-gray-900 dark:text-gray-100">
               Offered Skills
             </h2>
             <div className="flex flex-wrap gap-3">
               {skillsData['Offered Skills'].map((skill, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-4 rounded-lg border border-gray-400 p-8 pt-5 text-sm shadow-sm"
+                  className="flex items-center gap-4 rounded-lg border border-gray-400 p-8 pt-5 text-sm shadow-sm dark:border-gray-600 dark:bg-gray-800"
                 >
-                  <div>{<skill.icon size={20} className="text-red-600" />}</div>
-                  <div className="text-base font-bold text-gray-700">
+                  <skill.icon
+                    size={20}
+                    className="text-red-600 dark:text-red-500"
+                  />
+                  <div className="text-base font-bold text-gray-700 dark:text-gray-100">
                     {skill.title}
                   </div>
                 </div>
@@ -148,17 +158,20 @@ const Profile = () => {
 
         {(activeTab === 'All' || activeTab === 'Desired Skills') && (
           <div>
-            <h2 className="mt-3 mb-6 text-left text-xl font-bold">
+            <h2 className="mt-3 mb-6 text-left text-xl font-bold text-gray-900 dark:text-gray-100">
               Desired Skills
             </h2>
             <div className="flex flex-wrap gap-3">
               {skillsData['Desired Skills'].map((skill, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-4 rounded-lg border border-gray-400 p-8 pt-5 text-sm shadow-sm"
+                  className="flex items-center gap-4 rounded-lg border border-gray-400 p-8 pt-5 text-sm shadow-sm dark:border-gray-600 dark:bg-gray-800"
                 >
-                  <div>{<skill.icon size={20} className="text-red-600" />}</div>
-                  <div className="text-base font-bold text-gray-700">
+                  <skill.icon
+                    size={20}
+                    className="text-red-600 dark:text-red-500"
+                  />
+                  <div className="text-base font-bold text-gray-700 dark:text-gray-100">
                     {skill.title}
                   </div>
                 </div>
@@ -169,12 +182,14 @@ const Profile = () => {
 
         {(activeTab === 'All' || activeTab === 'Portfolio') && (
           <div>
-            <h2 className="mt-3 mb-6 text-left text-xl font-bold">Portfolio</h2>
+            <h2 className="mt-3 mb-6 text-left text-xl font-bold text-gray-900 dark:text-gray-100">
+              Portfolio
+            </h2>
             <div className="grid grid-cols-2 gap-3">
               {portfolioData.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex h-50 w-full items-center justify-center rounded-lg border border-gray-300 bg-gray-100"
+                  className="flex h-50 w-full items-center justify-center rounded-lg border border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-800"
                 >
                   Portfolio {idx + 1}
                 </div>
@@ -183,50 +198,55 @@ const Profile = () => {
           </div>
         )}
 
-        {/* Review Content */}
+        {/* Reviews */}
         <div className="text-left">
-          <h3 className="my-3 text-xl font-bold">Reviews</h3>
-          <p className="mb-3 text-3xl font-bold">{rating}</p>
+          <h3 className="my-3 text-xl font-bold text-gray-900 dark:text-gray-100">
+            Reviews
+          </h3>
+          <p className="mb-3 text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {rating}
+          </p>
+
+          {/* Star Rating */}
           <div className="flex space-x-1">
             {Array.from({ length: maxStars }).map((_, i) => {
               if (i + 1 <= Math.floor(rating)) {
-                // full star
                 return (
                   <Star
                     key={i}
                     size={14}
-                    className="text-red-700"
+                    className="text-red-700 dark:text-red-400"
                     fill="currentColor"
                   />
                 );
               } else if (i < rating) {
-                // half star
                 return (
                   <StarHalf
                     key={i}
                     size={14}
-                    className="text-red-700"
+                    className="text-red-700 dark:text-red-400"
                     fill="currentColor"
                   />
                 );
               } else {
-                // empty star
                 return (
                   <Star
                     key={i}
                     size={14}
-                    className="text-gray-300"
+                    className="text-gray-300 dark:text-gray-600"
                     fill="currentColor"
                   />
                 );
               }
             })}
           </div>
-          <p className="my-2 text-sm text-gray-500">25 reviews</p>
-          {/* Review chart */}
+          <p className="my-2 text-sm text-gray-500 dark:text-gray-400">
+            25 reviews
+          </p>
+
+          {/* Review Chart */}
           <div className="mt-6 space-y-1.5">
             {[5, 4, 3, 2, 1].map((star) => {
-              // percentages for each rating
               const percentMap: Record<number, number> = {
                 5: 70,
                 4: 20,
@@ -237,20 +257,16 @@ const Profile = () => {
               const percent = percentMap[star];
               return (
                 <div key={star} className="flex items-center space-x-2">
-                  {/* Star number */}
-                  <span className="w-4 text-sm font-medium">{star}</span>
-
-                  {/* Progress bar container */}
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-red-100/50">
-                    {/* Filled portion */}
+                  <span className="w-4 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {star}
+                  </span>
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-red-100/50 dark:bg-red-900/50">
                     <div
-                      className="h-2 bg-red-500"
+                      className="h-2 bg-red-500 dark:bg-red-400"
                       style={{ width: `${percent}%` }}
                     ></div>
                   </div>
-
-                  {/* Percentage label */}
-                  <span className="w-10 text-right text-sm font-medium text-gray-600">
+                  <span className="w-10 text-right text-sm font-medium text-gray-600 dark:text-gray-400">
                     {percent}%
                   </span>
                 </div>
@@ -258,16 +274,15 @@ const Profile = () => {
             })}
           </div>
 
-          {/* Reviewers List */}
+          {/* Reviewers */}
           <div className="mt-6 space-y-4">
             {reviewers.map((reviewer, idx) => (
               <div
                 key={idx}
-                className="rounded-lg border-transparent p-4 shadow-xs"
+                className="rounded-lg border border-gray-200 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
               >
-                {/* Header: avatar, name, date */}
                 <div className="mb-2 flex items-center space-x-3">
-                  <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-300">
+                  <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-600">
                     <img
                       src={reviewer.img}
                       alt={reviewer.name}
@@ -275,14 +290,14 @@ const Profile = () => {
                     />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">
                       {reviewer.name}
                     </p>
-                    <p className="text-xs text-gray-500">{reviewer.date}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {reviewer.date}
+                    </p>
                   </div>
                 </div>
-
-                {/* Stars */}
                 <div className="mt-5 mb-3 flex space-x-1">
                   {Array.from({ length: 5 }).map((_, starIdx) => (
                     <Star
@@ -290,20 +305,16 @@ const Profile = () => {
                       size={14}
                       className={
                         starIdx < reviewer.stars
-                          ? 'text-red-700'
-                          : 'text-gray-300'
+                          ? 'text-red-700 dark:text-red-400'
+                          : 'text-gray-300 dark:text-gray-600'
                       }
                     />
                   ))}
                 </div>
-
-                {/* Review text */}
-                <p className="mb-4 text-sm font-medium text-gray-700">
+                <p className="mb-4 text-sm font-medium text-gray-700 dark:text-gray-300">
                   {reviewer.review}
                 </p>
-
-                {/* Likes / Dislikes */}
-                <div className="mb-3 flex space-x-4 text-sm font-semibold text-gray-500">
+                <div className="mb-3 flex space-x-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
                   <div className="flex items-center space-x-1">
                     <ThumbsUp size={16} /> <span>{reviewer.likes}</span>
                   </div>

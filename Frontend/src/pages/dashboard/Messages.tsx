@@ -85,21 +85,23 @@ const Messages = () => {
   }, [messages]);
 
   return (
-    <div className="mx-auto mb-2 flex h-[calc(100vh-70px)] max-w-xl flex-col justify-between">
+    <div className="mx-auto mb-2 flex h-[calc(100vh-70px)] max-w-xl flex-col justify-between bg-stone-50 py-2 dark:bg-gray-900">
       {/* Header */}
-      <div className="relative flex items-center justify-center border-b-2 border-gray-200 pt-2 pb-4">
+      <div className="relative flex items-center justify-center border-b border-gray-200 pt-2 pb-4 dark:border-gray-700">
         <ChevronLeft
           size={28}
-          className="absolute left-2 cursor-pointer"
+          className="absolute left-2 cursor-pointer text-gray-900 dark:text-gray-100"
           onClick={() => navigate(-1)}
         />
         <div className="text-center">
-          <h1 className="text-xl font-bold">Liam Harper</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            Liam Harper
+          </h1>
           <p className="text-sm font-semibold text-green-400">Online</p>
         </div>
         <Phone
           size={20}
-          className="absolute right-3 cursor-pointer"
+          className="absolute right-3 cursor-pointer text-gray-900 dark:text-gray-100"
           onClick={() => navigate('')}
         />
       </div>
@@ -124,9 +126,9 @@ const Messages = () => {
               <div
                 className={`max-w-[70%] p-3 text-sm ${
                   msg.isPOV
-                    ? 'rounded-tl-lg rounded-tr-lg rounded-br-none rounded-bl-lg bg-red-500 text-white'
-                    : 'rounded-lg rounded-br-lg rounded-bl-none bg-gray-200 text-gray-900'
-                } `}
+                    ? 'rounded-tl-lg rounded-tr-lg rounded-br-none rounded-bl-lg bg-red-500 text-right text-white dark:bg-red-500'
+                    : 'rounded-lg rounded-br-lg rounded-bl-none bg-gray-200 text-left text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                }`}
               >
                 {msg.text}
               </div>
@@ -141,8 +143,10 @@ const Messages = () => {
             </div>
 
             <div
-              className={`text-xs text-gray-400 ${
-                msg.isPOV ? 'mr-10 text-right' : 'ml-10 text-left'
+              className={`text-xs ${
+                msg.isPOV
+                  ? 'mr-10 text-right text-gray-400'
+                  : 'ml-10 text-left text-gray-500 dark:text-gray-400'
               }`}
             >
               {msg.time}
@@ -155,21 +159,21 @@ const Messages = () => {
       </div>
 
       {/* Message input */}
-      <div className="flex items-center space-x-2 px-2 pt-2">
-        <div className="flex flex-1 items-center rounded-full bg-gray-200 px-3 py-2">
+      <div className="flex items-center space-x-2 border-t border-gray-200 bg-stone-50 px-2 pt-2 dark:border-gray-700 dark:bg-gray-900">
+        <div className="flex flex-1 items-center rounded-full bg-gray-200 px-3 py-2 dark:bg-gray-700">
           <input
             type="text"
             placeholder="Message..."
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
-            className="flex-1 bg-transparent py-1 pl-2 outline-none"
+            className="flex-1 bg-transparent py-1 pl-2 text-gray-900 placeholder-gray-500 outline-none dark:text-gray-100 dark:placeholder-gray-400"
           />
-          <div className="flex w-10 items-center justify-center text-gray-500">
+          <div className="flex w-10 items-center justify-center text-gray-500 dark:text-gray-400">
             <Image size={18} />
           </div>
         </div>
         <div
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white transition-colors hover:bg-red-700"
           onClick={handleSend}
         >
           <SendHorizonal size={18} />
