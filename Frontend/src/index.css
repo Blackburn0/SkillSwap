@@ -1,1 +1,73 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@variant dark (.dark &);
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* ===== Custom Scrollbar (All Browsers) ===== */
+
+/* Chrome, Edge, and Safari - Light Mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* Firefox - Light Mode */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f1f1f1;
+}
+
+/* Dark mode - class based */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border: 2px solid #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280;
+}
+
+.dark * {
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+.hide-scrollbar-vertical::-webkit-scrollbar {
+  width: 0;
+}
+
+.hide-scrollbar-vertical {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
