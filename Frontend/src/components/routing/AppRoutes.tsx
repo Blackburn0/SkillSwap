@@ -12,6 +12,15 @@ import Profile from '@/pages/dashboard/Profile';
 import Listing from '@/pages/dashboard/Listing';
 import Trade from '@/pages/dashboard/Trade';
 import Messages from '@/pages/dashboard/Messages';
+import Notifications from '@/pages/dashboard/Notifications';
+import Settings from '@/pages/dashboard/Settings';
+import Preferences from '@/pages/dashboard/Preferences';
+import TradeDetails from '@/pages/dashboard/TradeDetails';
+import ProposeTrade from '@/pages/dashboard/ProposeTrade';
+import Filters from '@/pages/dashboard/Filters';
+import PaymentMethods from '@/pages/dashboard/PaymentMethods';
+import BlockedUsers from '@/pages/dashboard/BlockedUsers';
+import NotFound from '@/pages/dashboard/404';
 
 const AppRoutes = () => {
   return (
@@ -36,9 +45,23 @@ const AppRoutes = () => {
           <Route index element={<DashboardHome />} />
           <Route path="trade" element={<Trade />} />
           <Route path="listing" element={<Listing />} />
+          <Route path="filter-listing" element={<Filters />} />
           <Route path="messages" element={<Messages />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="trade-details" element={<TradeDetails />} />
+          <Route path="propose-trade" element={<ProposeTrade />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="settings/preferences" element={<Preferences />} />
+          <Route path="settings/payment" element={<PaymentMethods />} />
+          <Route path="settings/blocked" element={<BlockedUsers />} />
         </Route>
+
+        {/* Do not share the dashboard layout but part of the dashboard */}
+        <Route path="/dashboard/notification" element={<Notifications />} />
+        <Route path="/dashboard/notification" element={<Notifications />} />
+
+        {/* 404 Page */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
