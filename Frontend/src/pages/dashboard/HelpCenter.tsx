@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronUp } from 'lucide-react';
 
 const faqs = [
   {
@@ -28,45 +28,55 @@ const HelpCenter = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <main className="flex flex-col min-h-screen bg-white text-gray-900">
+    <main className="flex min-h-screen flex-col bg-white px-6 text-gray-900 dark:bg-black">
       {/* Header */}
-      <header className="flex items-center px-6 py-4 border-b border-gray-200 bg-white">
+      <header className="flex items-center border-b py-4">
         <button
           onClick={() => window.history.back()}
-          className="text-gray-700 font-medium text-base"
+          className="cursor-pointer text-base font-medium text-gray-700 dark:text-white"
         >
-          ←
+          <ChevronLeft size={26} />
         </button>
-        <h1 className="flex-1 text-center text-lg font-semibold">Help Center</h1>
+        <h1 className="flex-1 text-center text-lg font-semibold text-black dark:text-white">
+          Help Center
+        </h1>
         <div className="w-5" /> {/* spacing placeholder for alignment */}
       </header>
 
       {/* Main Section */}
-      <section className="flex-1 px-6 py-8 max-w-xl mx-auto w-full">
-        <h2 className="text-2xl font-semibold mb-6">Common Questions</h2>
+      <section className="mx-auto w-full max-w-xl flex-1 py-8">
+        <h2 className="mb-6 text-2xl font-semibold text-gray-800 dark:text-white">
+          Common Questions
+        </h2>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl border border-gray-100 shadow-sm"
+              className="rounded-xl border border-gray-100 bg-white shadow-sm dark:bg-gray-700"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex justify-between items-center w-full px-4 py-4 text-left"
+                className="flex w-full items-center justify-between px-4 py-4 text-left"
               >
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-gray-900 dark:text-gray-200">
                   {faq.question}
                 </span>
                 {openIndex === index ? (
-                  <ChevronUp size={18} className="text-gray-600" />
+                  <ChevronUp
+                    size={18}
+                    className="cursor-pointer text-gray-600 dark:text-gray-200"
+                  />
                 ) : (
-                  <ChevronDown size={18} className="text-gray-600" />
+                  <ChevronDown
+                    size={18}
+                    className="cursor-pointer text-gray-600 dark:text-gray-200"
+                  />
                 )}
               </button>
 
               {openIndex === index && (
-                <div className="px-4 pb-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                <div className="border-t border-gray-100 p-4 text-left text-sm leading-relaxed text-gray-600 dark:text-gray-200">
                   {faq.answer}
                 </div>
               )}

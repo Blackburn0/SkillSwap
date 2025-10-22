@@ -29,7 +29,7 @@ const Login = () => {
   useEnterKey(handleLogin);
 
   return (
-    <div className="mx-auto min-h-screen max-w-lg px-4 py-8">
+    <div className="mx-auto min-h-screen max-w-lg bg-white px-4 py-8">
       <div className="mt-14 flex flex-col text-center">
         <div>
           <h1 className="text-3xl font-bold md:text-3xl">Swapo</h1>

@@ -17,6 +17,11 @@
   animation: slide-in 0.3s ease-out;
 }
 
+body {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #ff4d4d, #ffe5e5, white);
+}
+
 /* ===== Custom Scrollbar (All Browsers) ===== */
 
 /* Chrome, Edge, and Safari - Light Mode */
@@ -71,3 +76,8 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* debugging */
+/* * {
+  border: 2px solid red;
+} */

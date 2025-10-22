@@ -9,45 +9,46 @@ interface WelcomeTourProps {
   step: number;
 }
 
-
 // const WelcomeTour = ({ onNext }: WelcomeTourProps) => {
 const WelcomeTour = ({ onNext, onGoTo, step }: WelcomeTourProps) => {
-
   return (
-    <section className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-b from-[#FF4D4D] via-[#FFE5E5] to-white text-center px-6 py-10">
+    <section className="flex min-h-screen flex-col items-center justify-between bg-gradient-to-b from-[#FF4D4D] via-[#FFE5E5] to-white px-6 py-10 text-center">
       {/* Icons */}
-      <div className="flex-1 flex flex-col justify-center items-center space-y-6">
-        <div className="relative flex justify-center items-center">
-          <div className="absolute top-0 right-10 bg-white p-4 rounded-full shadow-md">
+      <div className="flex flex-1 flex-col items-center justify-center space-y-6">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute top-0 right-10 rounded-full bg-white p-4 shadow-md">
             <Code2 className="text-black" size={22} />
           </div>
-          <div className="absolute bottom-0 left-10 bg-white p-4 rounded-full shadow-md">
+          <div className="absolute bottom-0 left-10 rounded-full bg-white p-4 shadow-md">
             <Music className="text-black" size={22} />
           </div>
-          <div className="absolute bottom-0 right-[-1rem] bg-white p-4 rounded-full shadow-md">
+          <div className="absolute right-[-1rem] bottom-0 rounded-full bg-white p-4 shadow-md">
             <Wrench className="text-black" size={22} />
           </div>
 
-          <div className="w-64 h-64 bg-contain bg-no-repeat bg-center opacity-70" style={{ backgroundImage: `url(${myImage})` }} />
+          <div
+            className="h-64 w-64 bg-contain bg-center bg-no-repeat opacity-70"
+            style={{ backgroundImage: `url(${myImage})` }}
+          />
         </div>
 
         <div className="space-y-3">
           <h1 className="text-2xl font-bold text-gray-900">
             Trade your skills, unlock new ones
           </h1>
-          <p className="text-gray-600 text-base leading-relaxed">
+          <p className="text-base leading-relaxed text-gray-600">
             Exchange your expertise with others and learn new skills in return.
           </p>
         </div>
       </div>
 
       {/* Progress + Button */}
-      <div className="space-y-6 w-full max-w-xs">
+      <div className="w-full space-y-6">
         <ProgressBar total={3} current={step} onChange={onGoTo} />
 
         <Button
           onClick={onNext}
-          className="bg-[#FF2E2E] py-3 text-lg font-semibold flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 bg-[#FF2E2E]"
         >
           Get Started
           <ArrowRight size={20} />

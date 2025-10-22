@@ -16,9 +16,9 @@ const DashboardLayout = () => {
       </main>
 
       {/* Footer Nav links */}
-      <footer className="fixed bottom-0 left-0 w-full border-t border-gray-300 bg-white pt-2 dark:bg-black">
-        <div className="mx-auto max-w-xl px-4">
-          <nav className="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+      <footer className="fixed bottom-0 left-1/2 w-full max-w-lg -translate-x-1/2 border-t border-gray-300 bg-white pt-2 dark:bg-black">
+        <div className="px-4">
+          <nav className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
             <NavLink
               to="/dashboard"
               end
