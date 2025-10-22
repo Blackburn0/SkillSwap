@@ -20,8 +20,15 @@ import ProposeTrade from '@/pages/dashboard/ProposeTrade';
 import Filters from '@/pages/dashboard/Filters';
 import PaymentMethods from '@/pages/dashboard/PaymentMethods';
 import BlockedUsers from '@/pages/dashboard/BlockedUsers';
+import UpdatePassword from '@/pages/dashboard/UpdatePassword';
+import Privacy from '@/pages/dashboard/Privacy';
+import HelpCenter from '@/pages/dashboard/HelpCenter';
+import About from '@/pages/dashboard/About';
+
 import NotFound from '@/pages/dashboard/404';
+import EditProfile from '@/pages/EditProfile';
 import CreateListing from '@/pages/CreateListing';
+import DeleteAccount  from '@/pages/DeleteAccount';
 
 
 const AppRoutes = () => {
@@ -53,16 +60,25 @@ const AppRoutes = () => {
           <Route path="trade-details" element={<TradeDetails />} />
           <Route path="propose-trade" element={<ProposeTrade />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="settings/update-password" element={<UpdatePassword />} />
+          <Route path="settings/privacy" element={<Privacy />} />
+
           <Route path="settings/preferences" element={<Preferences />} />
           <Route path="settings/payment" element={<PaymentMethods />} />
           <Route path="settings/blocked" element={<BlockedUsers />} />
+          <Route path="settings/help" element={<HelpCenter />} />
+          <Route path="settings/about" element={<About />} />
+
         </Route>
 
         {/* Do not share the dashboard layout but part of the dashboard */}
         <Route path="/dashboard/notification" element={<Notifications />} />
-        <Route path="/dashboard/notification" element={<Notifications />} />
 
         <Route path="/create-listing" element={<CreateListing />} />
+        <Route path="/profile/edit" element={<EditProfile />} />
+        <Route path="/delete-account" element={<DeleteAccount  />} />
+
+
         
 
         {/* 404 Page */}
