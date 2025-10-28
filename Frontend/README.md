@@ -155,3 +155,11 @@ The AppRoutes is in the components/routing/ folder
 ## Button, Input & Toast in action
 
 Check home page '/' to see them in action
+
+<!-- TODO: -->
+
+- use the authcontext to track authentication:
+  - signup
+  - login
+  - logout
+  - protected routes

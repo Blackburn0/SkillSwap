@@ -6,23 +6,60 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { validateEmail } from '@/utils/ValidateEmail';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import { useCrud, type EntityWithId } from '@/hooks/useCrud';
+
+interface ResetRequest extends EntityWithId {
+  id: number;
+}
+
+// Define the payload type (what we send to the API).
+interface ForgotPasswordPayload {
+  email: string;
+}
+
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
+  // Initialize useCrud for the 'forgot-password' endpoint
+
+  const { createItem, loading } = useCrud<ResetRequest>(
+    `${API_BASE_URL}/auth/password/forgot/`,
+  );
+
   const [email, setEmail] = useState('');
 
-  const handleForgotPassword = () => {
+  // Update the handler to be async and use the API hook
+  const handleForgotPassword = async () => {
+    //  Client-side Validation ---
     if (!validateEmail(email)) {
       showToast('Please enter a valid email address', 'info');
       return;
-    } else if (email)
-      showToast('Please check your email for the reset link.', 'success');
-    navigate('/reset-password');
+    }
+
+    const payload: ForgotPasswordPayload = { email };
+
+    // API Call (Create Operation) ---
+    try {
+      // The createItem function sends the POST request
+      await createItem(payload as any);
+      // Success Handling ---
+      showToast('Password reset email sent! Check your inbox.', 'success');
+
+      // Navigate to login page
+      navigate('/login');
+    } catch (err) {
+      // Error Handling ---
+      const errorMessage =
+        (err as Error).message ||
+        'Failed to send reset link. Please try again.';
+      showToast(errorMessage, 'error');
+    }
   };
 
-  //  Trigger forgotPassword on Enter key
+  //  Trigger forgotPassword on Enter key
   useEnterKey(handleForgotPassword);
 
   return (
@@ -58,8 +95,12 @@ const ForgotPassword = () => {
         </div>
 
         <div className="text-center">
-          <Button className="mb-4" onClick={handleForgotPassword}>
-            Send Reset Link
+          <Button
+            className="mb-4"
+            onClick={handleForgotPassword}
+            disabled={loading}
+          >
+            {loading ? 'Sending...' : 'Send Reset Link'}
           </Button>
           <p className="text-sm font-medium text-gray-600">
             Remember your password?{' '}

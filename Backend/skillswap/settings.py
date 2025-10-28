@@ -78,9 +78,16 @@ INSTALLED_APPS = [
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 # Link social accounts to existing users with matching email
-# Keep these:
 ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
+
+# where to redirect after social login
+LOGIN_REDIRECT_URL = "http://localhost:5173/dashboard"
+SIGNUP_REDIRECT_URL = "http://localhost:5173/onboarding"
+LOGOUT_REDIRECT_URL = 'http://localhost:5173'
+
+# change to https in prod
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http' 
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_REQUIRED = True
@@ -219,10 +226,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1 # Needed for django-allauth
 
 REST_USE_JWT = True  # Use SimpleJWT with dj-rest-auth
-
-# where to redirect after social login
-LOGIN_REDIRECT_URL = "/"  # or frontend URL
-LOGOUT_REDIRECT_URL = '/'
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     "google": {

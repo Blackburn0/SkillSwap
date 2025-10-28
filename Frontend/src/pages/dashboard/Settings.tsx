@@ -1,3 +1,7 @@
+import Button from '@/components/ui/Button';
+import { useAuth } from '@/context/AuthContext';
+
+import { useToast } from '@/hooks/useToast';
 import {
   ChevronLeft,
   CircleQuestionMark,
@@ -63,8 +67,24 @@ const support = [
   },
 ];
 
+const FRONTEND_LOGOUT_URL = '/';
+
 const Settings = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { loading, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      //await api.post('/auth/logout/');
+      logout();
+      showToast('Successfully logged out. See you later!', 'success');
+      navigate(FRONTEND_LOGOUT_URL);
+    } catch (error) {
+      console.error('Logout error:');
+      showToast('Logout failed.', 'error');
+    }
+  };
 
   const renderCard = (items: typeof account) => (
     <div className="divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white shadow-sm dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-900">
@@ -150,6 +170,13 @@ const Settings = () => {
             SUPPORT
           </span>
           {renderCard(support)}
+        </div>
+
+        {/* logout */}
+        <div className="space-y-2">
+          <Button disabled={loading} onClick={handleLogout}>
+            {loading ? 'Logging out...' : 'Logout'}
+          </Button>
         </div>
       </div>
     </div>

@@ -35,6 +35,9 @@ urlpatterns = [
     # Social login redirects & callbacks
     path("accounts/", include("allauth.urls")),
 
+    # Logout
+    path('api/v1/auth/logout/', include('dj_rest_auth.urls')),
+
     # user-skill endpoints
     path("api/v1/user-skills/", include("userSkills.urls")),
     # Other endpoints

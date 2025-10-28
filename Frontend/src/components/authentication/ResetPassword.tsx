@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LockKeyhole, Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
@@ -8,10 +8,51 @@ import PasswordStrengthChecker from '@/utils/PasswordStrengthChecker';
 import { useToast } from '@/hooks/useToast';
 import { checkPasswordMatch } from '@/utils/CheckPasswordMatch';
 import { useEnterKey } from '@/hooks/useEnterKey';
+import { useCrud } from '@/hooks/useCrud';
+
+// Define the structure of the data payload sent to the API
+interface ResetPasswordPayload {
+  new_password: string;
+  new_password_confirm: string;
+  // These are expected in the request body, even if also in the URL path
+  uid: string;
+  token: string;
+}
+
+// Define the complete entity type (T) for useCrud.
+interface ResetPasswordEntity extends ResetPasswordPayload {
+  id: string | number;
+  status?: string; // Include status if the API returns it
+}
+
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  // Extract uid and token from the URL (e.g., ?uid=...&token=...)
+  const verificationDetails = useMemo(
+    () => ({
+      uid: searchParams.get('uid'),
+      token: searchParams.get('token'),
+    }),
+    [searchParams],
+  );
+
+  // Dynamically construct the base URL using the uid and token
+  const baseUrl = useMemo(() => {
+    const uid = verificationDetails.uid || 'invalid_uid';
+    const token = verificationDetails.token || 'invalid_token';
+
+    // Using the user-specified dynamic URL structure
+    return `${API_BASE_URL}/auth/password/reset/${uid}/${token}/`;
+  }, [verificationDetails, API_BASE_URL]);
+
+  // Initialize the Crud hook with the dynamically constructed URL
+  const { createItem, loading: resetLoading } =
+    useCrud<ResetPasswordEntity>(baseUrl);
 
   const passwordToggle = usePasswordToggle();
   const confirmToggle = usePasswordToggle();
@@ -19,15 +60,51 @@ const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
-  const handleReset = () => {
+  // Validation Check: Button should be disabled if fields are empty
+  const isFormIncomplete = !newPassword || !newPasswordConfirm;
+
+  const handleReset = async () => {
+    // 1. Client-side Validation ---
+
+    if (!verificationDetails.uid || !verificationDetails.token) {
+      showToast(
+        'The password reset link is invalid or missing verification data (uid/token).',
+        'error',
+      );
+      return;
+    }
+
     if (!checkPasswordMatch(newPassword, newPasswordConfirm, showToast)) return;
-    else if (newPassword)
-      showToast('Demo Password reset successful', 'success');
+
+    // 2. Prepare Data and Call the Hook ---
+    const resetData: ResetPasswordPayload = {
+      new_password: newPassword,
+      new_password_confirm: newPasswordConfirm,
+      uid: verificationDetails.uid,
+      token: verificationDetails.token,
+    };
 
     // proceed with API call
+    try {
+      // The hook handles the POST request to the dynamic URL
+      const response = await createItem(resetData);
+
+      // Success Handling ---
+      console.log('Password reset success response:', response);
+      showToast('Password reset successful! You can now log in.', 'success');
+
+      // Redirect to login page after successful reset
+      navigate('/login');
+    } catch (error) {
+      // Error Handling ---
+      const errorMessage =
+        (error as Error).message ||
+        'Password reset failed. Please check the link or try again.';
+      showToast(errorMessage, 'error');
+    }
   };
 
-  //  Trigger resetPassword on Enter key
+  //  Trigger resetPassword on Enter key
   useEnterKey(handleReset);
 
   return (
@@ -102,8 +179,13 @@ const ResetPassword = () => {
         </div>
 
         <div className="text-center">
-          <Button className="mb-4" onClick={handleReset}>
-            Reset Password
+          <Button
+            className="mb-4"
+            onClick={handleReset}
+            // Disable button if loading OR if form fields are empty
+            disabled={resetLoading || isFormIncomplete}
+          >
+            {resetLoading ? 'Resetting...' : 'Reset Password'}
           </Button>
           <p className="text-sm font-medium text-gray-600">
             Already have an account?{' '}

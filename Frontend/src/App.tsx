@@ -1,13 +1,19 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppRoutes from './components/routing/AppRoutes';
 import '@/index.css';
+import { AuthProvider } from './context/AuthContext';
+import MobileOnlyWrapper from './components/MobileOnlyWrapper';
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppRoutes />
+      <MobileOnlyWrapper>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </MobileOnlyWrapper>
     </QueryClientProvider>
   );
 };

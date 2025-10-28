@@ -1,6 +1,7 @@
 # accounts/adapters.py
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.conf import settings
 from django.contrib.auth import get_user_model
 import logging
 import uuid
@@ -32,6 +33,18 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         result = super().save_user(request, user, form, commit)
         logger.info(f"save_user completed, user id: {result.user_id if result else 'None'}")
         return result
+    
+    def get_login_redirect_url(self, request):
+        """
+        NEW: Determines the final redirect URL after a standard login/signup.
+        This is necessary to force the redirect to the frontend URL for API use.
+        """
+        if request.user.is_authenticated:
+            logger.info("Regular user authenticated. Redirecting to LOGIN_REDIRECT_URL.")
+            return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
+        
+        # Fallback to default behavior if user somehow isn't authenticated
+        return super().get_login_redirect_url(request)
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -93,3 +106,26 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         
         logger.info(f"Final unique username: {user.username}")
         return user
+    
+    # NEW METHOD TO CONTROL FINAL REDIRECT URL
+    def get_login_redirect_url(self, request):
+        """
+        Determines the final redirect URL after a social login/signup.
+        Redirects new users to the SIGNUP_REDIRECT_URL.
+        """
+        
+        # 'login' is a property set on the request by allauth during the social login process.
+        # It contains the result of the authentication.
+        sociallogin = request.session.get('socialaccount_sociallogin')
+        
+        if sociallogin:
+            # Check if this social login resulted in a brand new account creation
+            if sociallogin.is_existing is False:
+                logger.info("New social user signup detected. Redirecting to SIGNUP_REDIRECT_URL.")
+                # This will look up settings.SIGNUP_REDIRECT_URL
+                return getattr(settings, 'SIGNUP_REDIRECT_URL', '/')
+        
+        # If it's an existing user logging in, or if the sociallogin object is gone,
+        # fallback to the default login redirect URL (settings.LOGIN_REDIRECT_URL).
+        logger.info("Existing social user login or standard flow. Redirecting to LOGIN_REDIRECT_URL.")
+        return getattr(settings, 'LOGIN_REDIRECT_URL', '/')
