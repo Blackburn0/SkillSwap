@@ -29,7 +29,7 @@ import NotFound from '@/pages/dashboard/404';
 import EditProfile from '@/pages/EditProfile';
 import CreateListing from '@/pages/CreateListing';
 import DeleteAccount from '@/pages/DeleteAccount';
-import ProtectedRoute from '../ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 
 const AppRoutes = () => {
   return (
@@ -50,10 +50,10 @@ const AppRoutes = () => {
       {/* ---------------------------------------------------------------- */}
       {/* <Route element={<ProtectedRoute />}> */}
       {/* Onboarding */}
-      <Route path="/onboarding" element={<Onboarding />} />
+      {/* <Route path="/onboarding" element={<Onboarding />} /> */}
 
       {/* Parent Dashboard route */}
-      <Route path="/dashboard" element={<DashboardLayout />}>
+      {/* <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardHome />} />
         <Route path="trade" element={<Trade />} />
         <Route path="listing" element={<Listing />} />
@@ -70,7 +70,28 @@ const AppRoutes = () => {
         <Route path="settings/blocked" element={<BlockedUsers />} />
         <Route path="settings/help" element={<HelpCenter />} />
         <Route path="settings/about" element={<About />} />
-      </Route>
+      </Route> */}
+      <Route element={<ProtectedRoute />}>
+    <Route path="/onboarding" element={<Onboarding />} />
+    <Route path="/dashboard" element={<DashboardLayout />}>
+      <Route index element={<DashboardHome />} />
+      <Route path="trade" element={<Trade />} />
+      <Route path="listing" element={<Listing />} />
+      <Route path="filter-listing" element={<Filters />} />
+      <Route path="messages" element={<Messages />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="trade-details" element={<TradeDetails />} />
+      <Route path="propose-trade" element={<ProposeTrade />} />
+      <Route path="settings" element={<Settings />} />
+      <Route path="settings/update-password" element={<UpdatePassword />} />
+      <Route path="settings/privacy" element={<Privacy />} />
+      <Route path="settings/preferences" element={<Preferences />} />
+      <Route path="settings/payment" element={<PaymentMethods />} />
+      <Route path="settings/blocked" element={<BlockedUsers />} />
+      <Route path="settings/help" element={<HelpCenter />} />
+      <Route path="settings/about" element={<About />} />
+    </Route>
+  </Route>
 
       {/* Do not share the dashboard layout but part of the dashboard */}
       <Route path="/dashboard/notification" element={<Notifications />} />
